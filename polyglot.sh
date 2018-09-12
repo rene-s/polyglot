@@ -635,6 +635,9 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
     if _polyglot_is_pdksh && [ $TERM = 'cons25' ]; then
       :
     else
+      case $POLYGLOT_UNAME in
+        NetBSD|OpenBSD) PS1="$PS1$(print "$POLYGLOT_NP")" ;;
+      esac
       PS1="$PS1${POLYGLOT_REV}"
     fi
     _polyglot_is_pdksh && [ $TERM != 'cons25' ] && PS1=$PS1$(print "$POLYGLOT_NP")
