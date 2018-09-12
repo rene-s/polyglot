@@ -594,6 +594,9 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
   if _polyglot_is_pdksh && _polyglot_has_colors && [ $TERM != 'cons25' ]; then
 
     PS1=$(print "$POLYGLOT_NP\r")
+    case $POLYGLOT_UNAME in
+      OpenBSD*) PS1=$PS1$(print "$POLYGLOT_NP") ;;
+    esac
     PS1=$PS1$(print "\033[31;1m$POLYGLOT_NP")
     PS1=$PS1'$(_polyglot_exit_status $?)'
     if ! _polyglot_is_superuser; then
