@@ -607,7 +607,7 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
     PS1=$PS1$(print "$POLYGLOT_NP\033[34;1m$POLYGLOT_NP")
     PS1=$PS1'$(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")'
     PS1=$PS1$(print "$POLYGLOT_NP\033[0m\033[33m$POLYGLOT_NP")
-    PS1=$PS1'$(_polyglot_branch_status)'
+    PS1=$PS1'$(_polyglot_branch_status ksh)'
     PS1=$PS1$(print "$POLYGLOT_NP\033[0m$POLYGLOT_NP")
     PS1=$PS1' \$ '
 
