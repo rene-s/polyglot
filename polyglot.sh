@@ -594,7 +594,17 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
   fi
 
   if ! _polyglot_is_superuser; then
-    PS1='$(_polyglot_exit_status $?)${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) \$ '
+    if _polyglot_is_pdksh && _polyglot_has_colors; then
+        # shellcheck disable=SC2025
+        # note:
+        # - Color not reliable in pdksh, see https://github.com/agkozak/polyglot/commit/550fc20a4ec26db5b481f29aaab3b7456972bef8
+        # - Try to reintroduce and see what an actual solution might be. OpenBSD looks so drab...
+        PS1='\001\r\001\033[31;1m\001$(_polyglot_exit_status $?)\001\033[0m\033[32;1m\001${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING\001\033[0m\001 \001
+        \033[34;1m\001$(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")\001\033[0m\033[33m\001$(_polyglot_branch_status)\001\033[0m\001 \$ '
+        PS1=$(print "$PS1")
+    else
+        PS1='$(_polyglot_exit_status $?)${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) \$ '
+    fi
   else  # Superuser
     case ${POLYGLOT_UNAME:=$(uname -s)} in
       FreeBSD*|DragonFly*)
