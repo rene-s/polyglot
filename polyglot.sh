@@ -629,11 +629,19 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
     PS1=
     _polyglot_is_pdksh && [ $TERM != 'cons25' ] && PS1=$(print "$POLYGLOT_NP\r")
     PS1=$PS1'$(_polyglot_exit_status $?)'
-    PS1="$PS1${POLYGLOT_REV}"
+    if _polyglot_is_pdksh && [ $TERM = 'cons25' ]; then
+      :
+    else
+      PS1="$PS1${POLYGLOT_REV}"
+    fi
     _polyglot_is_pdksh && [ $TERM != 'cons25' ] && PS1=$PS1$(print "$POLYGLOT_NP")
     PS1=$PS1'${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING'
     _polyglot_is_pdksh && [ $TERM != 'cons25' ] && PS1=$PS1$(print "$POLYGLOT_NP")
-    PS1="$PS1${POLYGLOT_RESET}"
+    if _polyglot_is_pdksh && [ $TERM = 'cons25' ]; then
+      :
+    else
+      PS1="$PS1${POLYGLOT_RESET}"
+    fi
     _polyglot_is_pdksh && [ $TERM != 'cons25' ] && PS1=$PS1$(print "$POLYGLOT_NP")
     PS1=$PS1' $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) # '
   fi
