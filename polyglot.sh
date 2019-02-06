@@ -587,10 +587,11 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
     POLYGLOT_HOSTNAME_STRING=''
   fi
 
-  if _polyglot_is_pdksh; then
+  # A non-printable character (Ctrl-Q) for delimiting escape sequences in pdksh
+  POLYGLOT_NP="\021"
 
-    # A non-printable character (016,017,021,023)
-    POLYGLOT_NP="\021"
+  # cons25 in DragonFlyBSD displays otherwise non-printable characters
+  if _polyglot_is_pdksh && _polyglot_has_colors && [ $TERM != 'cons25' ]; then
 
     PS1=$(print "$POLYGLOT_NP\r")
     PS1=$PS1$(print "\033[31;1m$POLYGLOT_NP")
@@ -613,6 +614,7 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
   elif ! _polyglot_is_superuser; then
     PS1='$(_polyglot_exit_status $?)${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) \$ '
   else  # Superuser
+
     case ${POLYGLOT_UNAME:=$(uname -s)} in
       FreeBSD*|DragonFly*)
         POLYGLOT_REV=$(tput mr)
@@ -624,7 +626,16 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
         ;;
     esac
 
-    PS1='$(_polyglot_exit_status $?)${POLYGLOT_REV}${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING${POLYGLOT_RESET} $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) # '
+    PS1=
+    _polyglot_is_pdksh && PS1=$(print "$POLYGLOT_NP\r")
+    PS1=$PS1'$(_polyglot_exit_status $?)'
+    PS1="$PS1${POLYGLOT_REV}"
+    _polyglot_is_pdksh && PS1=$PS1$(print "$POLYGLOT_NP")
+    PS1=$PS1'${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING'
+    _polyglot_is_pdksh && PS1=$PS1$(print "$POLYGLOT_NP")
+    PS1="$PS1${POLYGLOT_RESET}"
+    _polyglot_is_pdksh && PS1=$PS1$(print "$POLYGLOT_NP")
+    PS1=$PS1' $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) # '
   fi
 
 else
