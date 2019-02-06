@@ -587,7 +587,30 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
     POLYGLOT_HOSTNAME_STRING=''
   fi
 
-  if ! _polyglot_is_superuser; then
+  if _polyglot_is_pdksh; then
+
+    # A non-printable character (016,017,021,023)
+    POLYGLOT_NP="\021"
+
+    PS1=$(print "$POLYGLOT_NP\r")
+    PS1=$PS1$(print "\033[31;1m$POLYGLOT_NP")
+    PS1=$PS1'$(_polyglot_exit_status $?)'
+    if ! _polyglot_is_superuser; then
+      PS1=$PS1$(print "$POLYGLOT_NP\033[0m\033[32;1m$POLYGLOT_NP")
+    else
+      PS1=$PS1$(print "$POLYGLOT_NP\033[0m\033[7m$POLYGLOT_NP")
+    fi
+    PS1=$PS1'${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING'
+    PS1=$PS1$(print "$POLYGLOT_NP\033[0m$POLYGLOT_NP")
+    PS1=$PS1' '
+    PS1=$PS1$(print "$POLYGLOT_NP\033[34;1m$POLYGLOT_NP")
+    PS1=$PS1'$(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")'
+    PS1=$PS1$(print "$POLYGLOT_NP\033[0m\033[33m$POLYGLOT_NP")
+    PS1=$PS1'$(_polyglot_branch_status)'
+    PS1=$PS1$(print "$POLYGLOT_NP\033[0m$POLYGLOT_NP")
+    PS1=$PS1' \$ '
+
+  elif ! _polyglot_is_superuser; then
     PS1='$(_polyglot_exit_status $?)${LOGNAME:-$(logname)}$POLYGLOT_HOSTNAME_STRING $(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")$(_polyglot_branch_status $POLYGLOT_KSH_BANG) \$ '
   else  # Superuser
     case ${POLYGLOT_UNAME:=$(uname -s)} in
