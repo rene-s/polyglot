@@ -595,7 +595,7 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
 
     PS1=$(print "$POLYGLOT_NP\r")
     case $POLYGLOT_UNAME in
-      OpenBSD*) PS1=$PS1$(print "$POLYGLOT_NP") ;;
+      NetBSD*|OpenBSD*) PS1=$PS1$(print "$POLYGLOT_NP") ;;
     esac
     PS1=$PS1$(print "\033[31;1m$POLYGLOT_NP")
     PS1=$PS1'$(_polyglot_exit_status $?)'
@@ -610,7 +610,7 @@ elif _polyglot_is_pdksh || [ "$0" = 'dash' ] || _polyglot_is_busybox; then
     PS1=$PS1$(print "$POLYGLOT_NP\033[34;1m$POLYGLOT_NP")
     PS1=$PS1'$(_polyglot_prompt_dirtrim "$POLYGLOT_PROMPT_DIRTRIM")'
     PS1=$PS1$(print "$POLYGLOT_NP\033[0m\033[33m$POLYGLOT_NP")
-    PS1=$PS1'$(_polyglot_branch_status ksh)'
+    PS1=$PS1'$(_polyglot_branch_status $POLYGLOT_KSH_BANG)'
     PS1=$PS1$(print "$POLYGLOT_NP\033[0m$POLYGLOT_NP")
     PS1=$PS1' \$ '
 
